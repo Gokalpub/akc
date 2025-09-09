@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AKC İNŞAAT | Modern ve Güvenilir İnşaat Çözümleri</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#f59e0b',
+                        dark: '#111827',
+                        lightDark: '#1f2937',
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            scroll-behavior: smooth;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1503387762-592deb58ef4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1500&q=80') no-repeat center center/cover;
+            background-attachment: fixed;
+        }
+        .text-shadow {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .scroll-element {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+        .alert-box {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10b981;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000;
+        }
+        .alert-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .hamburger {
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+        }
+        .hamburger span {
+            display: block;
+            position: absolute;
+            height: 3px;
+            width: 100%;
+            background: white;
+            border-radius: 3px;
+            opacity: 1;
+            left: 0;
+            transform: rotate(0deg);
+            transition: .25s ease-in-out;
+        }
+        .hamburger span:nth-child(1) {
+            top: 0px;
+        }
+        .hamburger span:nth-child(2) {
+            top: 8px;
+        }
+        .hamburger span:nth-child(3) {
+            top: 16px;
+        }
+        .hamburger.open span:nth-child(1) {
+            top: 8px;
+            transform: rotate(135deg);
+        }
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+            left: -30px;
+        }
+        .hamburger.open span:nth-child(3) {
+            top: 8px;
+            transform: rotate(-135deg);
+        }
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 70%;
+            height: 100vh;
+            background: #111827;
+            z-index: 40;
+            transition: right 0.3s ease;
+            padding: 80px 30px 30px;
+        }
+        .mobile-menu.open {
+            right: 0;
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 30;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 3s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Header & Navigation -->
+    <header id="home" class="hero-bg h-screen flex flex-col relative">
+        <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 bg-transparent">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+                <div class="logo text-2xl font-extrabold text-white tracking-wide text-shadow">
+                    AKC
+                    <span class="text-primary">
+                        <i class="fas fa-hard-hat"></i>
+                    </span>
+                    İNŞAAT
+                </div>
+                
+                <ul class="nav-links hidden md:flex space-x-8">
+                    <li><a href="#home" class="text-white hover:text-primary transition-colors duration-300">Ana Sayfa</a></li>
+                    <li><a href="#services" class="text-white hover:text-primary transition-colors duration-300">Hizmetler</a></li>
+                    <li><a href="#projects" class="text-white hover:text-primary transition-colors duration-300">Projeler</a></li>
+                    <li><a href="#about" class="text-white hover:text-primary transition-colors duration-300">Hakkımızda</a></li>
+                    <li><a href="#contact" class="text-white hover:text-primary transition-colors duration-300">İletişim</a></li>
+                </ul>
+                
+                <div class="md:hidden">
+                    <div class="hamburger" id="hamburger">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div class="overlay" id="overlay"></div>
+        <div class="mobile-menu" id="mobile-menu">
+            <ul class="space-y-6">
+                <li><a href="#home" class="text-white text-lg font-medium block py-2">Ana Sayfa</a></li>
+                <li><a href="#services" class="text-white text-lg font-medium block py-2">Hizmetler</a></li>
+                <li><a href="#projects" class="text-white text-lg font-medium block py-2">Projeler</a></li>
+                <li><a href="#about" class="text-white text-lg font-medium block py-2">Hakkımızda</a></li>
+                <li><a href="#contact" class="text-white text-lg font-medium block py-2">İletişim</a></li>
+            </ul>
+            <div class="mt-8 pt-8 border-t border-gray-700">
+                <div class="flex gap-4">
+                    <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="w-10 h-10 flex items-center justify-center bg-gray-800 rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero flex-1 flex flex-col justify-center items-center text-center px-4 py-8">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-4 lg:mb-6 tracking-tight animate-fade-in-up text-shadow">
+                Kalite ve Estetiğin Buluştuğu Adres
+            </h1>
+            <p class="text-lg sm:text-xl text-gray-300 max-w-3xl mb-8 leading-relaxed animate-fade-in-up delay-100 text-shadow">
+                30 yılı aşkın tecrübemizle hayallerinizdeki yapıları gerçeğe dönüştürüyoruz.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-200">
+                <a href="#projects" class="bg-primary text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-300 transform hover:-translate-y-1">
+                    Projelerimiz
+                </a>
+                <a href="#contact" class="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-full hover:bg-white hover:text-gray-900 transition-all duration-300 transform hover:-translate-y-1">
+                    Hemen Teklif Alın
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hizmetler -->
+    <section id="services" class="bg-dark py-16 lg:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Hizmetlerimiz</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Uzmanlığımızı sergilediğimiz temel alanlar</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="service-card p-6 bg-lightDark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-home text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Konut İnşaatı</h3>
+                    <p class="text-gray-400">Yaşam alanlarınızı modern çizgilerle tasarlıyor, hayallerinizdeki konutları inşa ediyoruz.</p>
+                </div>
+                
+                <div class="service-card p-6 bg-lightDark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-building text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Ticari Yapılar</h3>
+                    <p class="text-gray-400">İş hayatına değer katan, fonksiyonel ve estetik ticari binalar inşa ediyoruz.</p>
+                </div>
+                
+                <div class="service-card p-6 bg-lightDark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-industry text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Endüstriyel Tesisler</h3>
+                    <p class="text-gray-400">Üretim ve depolama ihtiyaçlarınız için en son teknolojiye uygun tesisler kuruyoruz.</p>
+                </div>
+                
+                <div class="service-card p-6 bg-lightDark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-tools text-4xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold text-white mb-2">Yenileme ve Tadilat</h3>
+                    <p class="text-gray-400">Mevcut yapılarınızı modernize ediyor, daha kullanışlı ve güvenli hale getiriyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Projeler -->
+    <section id="projects" class="bg-lightDark py-16 lg:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Öne Çıkan Projelerimiz</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Gerçekleştirdiğimiz ve gurur duyduğumuz projeler</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Project Card 1 -->
+                <div class="project-card bg-dark rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 scroll-element">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1448630360428-65456885c650?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Lüks Konut Projesi" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <a href="project-gokturk.html" class="text-gray-900 font-bold text-lg flex items-center">Projeyi İncele <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-white mb-2">Göktürk Rezidans</h3>
+                        <p class="text-gray-400">İstanbul'da 120 daireden oluşan lüks bir konut projesi.</p>
+                        <div class="flex justify-between items-center text-gray-500 text-sm mt-4">
+                            <span><i class="far fa-calendar-alt mr-1"></i> 2022</span>
+                            <span><i class="fas fa-map-marker-alt mr-1"></i> İstanbul</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Card 2 -->
+                <div class="project-card bg-dark rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 scroll-element">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Ofis Binasi" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <a href="project-levent.html" class="text-gray-900 font-bold text-lg flex items-center">Projeyi İncele <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-white mb-2">Levent Plaza</h3>
+                        <p class="text-gray-400">20 katlı modern ofis binası, İstanbul.</p>
+                        <div class="flex justify-between items-center text-gray-500 text-sm mt-4">
+                            <span><i class="far fa-calendar-alt mr-1"></i> 2021</span>
+                            <span><i class="fas fa-map-marker-alt mr-1"></i> İstanbul</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project Card 3 -->
+                <div class="project-card bg-dark rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 scroll-element">
+                    <div class="h-64 overflow-hidden relative">
+                        <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="Marmara AVM" class="w-full h-full object-cover transition-transform duration-500 hover:scale-110">
+                        <div class="absolute inset-0 bg-primary bg-opacity-80 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300">
+                            <a href="project-marmara.html" class="text-gray-900 font-bold text-lg flex items-center">Projeyi İncele <i class="fas fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-white mb-2">Marmara AVM</h3>
+                        <p class="text-gray-400">Bursa'da 150 mağazalı modern alışveriş merkezi.</p>
+                        <div class="flex justify-between items-center text-gray-500 text-sm mt-4">
+                            <span><i class="far fa-calendar-alt mr-1"></i> 2020</span>
+                            <span><i class="fas fa-map-marker-alt mr-1"></i> Bursa</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <a href="projects.html" class="inline-flex items-center text-primary font-semibold text-lg hover:underline">
+                    Tüm Projeleri Görüntüle
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Hakkımızda -->
+    <section id="about" class="bg-dark py-16 lg:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-white mb-4">Hakkımızda</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">30 yıllık tecrübemizle sektördeki güvenilir adresiniz</p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2 scroll-element">
+                    <h2 class="text-3xl font-extrabold text-white mb-4">Kalite ve Güven İçin Çalışıyoruz</h2>
+                    <p class="text-lg text-gray-400 mb-6">1993 yılında kurulan AKC İnşaat, Türkiye'nin önde gelen inşaat firmalarından biridir. Müşteri memnuniyetini ön planda tutarak, kaliteli ve güvenli yapılar inşa etmekteyiz.</p>
+                    <p class="text-lg text-gray-400 mb-6">Uzman ekibimiz ve deneyimli kadromuzla konut, ticari yapılar, endüstriyel tesisler ve yenileme projelerinde hizmet vermekteyiz.</p>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div class="flex items-center text-gray-300">
+                            <i class="fas fa-check-circle text-primary mr-3 text-xl"></i>
+                            <span>ISO 9001 Kalite Yönetim Sistemi Sertifikası</span>
+                        </div>
+                        <div class="flex items-center text-gray-300">
+                            <i class="fas fa-check-circle text-primary mr-3 text-xl"></i>
+                            <span>150'den fazla tamamlanmış proje</span>
+                        </div>
+                        <div class="flex items-center text-gray-300">
+                            <i class="fas fa-check-circle text-primary mr-3 text-xl"></i>
+                            <span>25 uzman mühendis ve mimar</span>
+                        </div>
+                        <div class="flex items-center text-gray-300">
+                            <i class="fas fa-check-circle text-primary mr-3 text-xl"></i>
+                            <span>7/24 kesintisiz destek hizmeti</span>
+                        </div>
+                    </div>
+                    
+                    <a href="#contact" class="bg-primary text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-300 transform hover:-translate-y-1">
+                        Bize Ulaşın
+                    </a>
+                </div>
+                
+                <div class="lg:w-1/2 relative scroll-element">
+                    <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" alt="AKC İnşaat Ekibi" class="w-full h-auto rounded-xl shadow-lg transform transition-transform duration-300 hover:scale-105">
+                    <div class="experience-badge absolute bottom-0 right-0 -mr-4 -mb-4 bg-primary text-gray-900 rounded-full h-40 w-40 flex flex-col items-center justify-center shadow-lg animate-bounce-slow">
+                        <span class="text-5xl font-extrabold">30+</span>
+                        <span class="text-lg uppercase tracking-wider">Yıl</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- İletişim -->
+    <section id="contact" class="bg-lightDark text-white py-16 lg:py-24">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-extrabold text-white mb-4">İletişim</h2>
+                <p class="text-xl text-gray-400 max-w-2xl mx-auto">Bize ulaşın, hayalinizdeki projeyi birlikte gerçekleştirelim</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="contact-item p-6 bg-dark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-map-marker-alt text-3xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Adres</h3>
+                    <p class="text-gray-400">Levent Mah. İnşaat Cad. No: 123<br>Beşiktaş/İstanbul</p>
+                </div>
+                
+                <div class="contact-item p-6 bg-dark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-phone text-3xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">Telefon</h3>
+                    <p class="text-gray-400">+90 (212) 345 67 89</p>
+                    <p class="text-gray-400">+90 (532) 123 45 67</p>
+                </div>
+                
+                <div class="contact-item p-6 bg-dark rounded-xl shadow-md hover:shadow-xl transition-all duration-300 flex flex-col items-center text-center scroll-element">
+                    <i class="fas fa-envelope text-3xl text-primary mb-4"></i>
+                    <h3 class="text-xl font-semibold mb-2">E-posta</h3>
+                    <p class="text-gray-400">info@akcinsaat.com</p>
+                    <p class="text-gray-400">proje@akcinsaat.com</p>
+                </div>
+            </div>
+            
+            <div class="bg-dark p-8 md:p-12 rounded-xl shadow-2xl max-w-4xl mx-auto">
+                <h3 class="text-2xl font-bold text-white text-center mb-8">Bizimle İletişime Geçin</h3>
+                <form id="contact-form">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label for="name" class="block text-gray-400 font-medium mb-2">Adınız Soyadınız</label>
+                            <input type="text" id="name" required class="w-full px-4 py-3 rounded-lg border border-gray-700 bg-lightDark text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-gray-400 font-medium mb-2">E-posta Adresiniz</label>
+                            <input type="email" id="email" required class="w-full px-4 py-3 rounded-lg border border-gray-700 bg-lightDark text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        </div>
+                    </div>
+                    <div class="mb-6">
+                        <label for="phone" class="block text-gray-400 font-medium mb-2">Telefon Numaranız</label>
+                        <input type="tel" id="phone" class="w-full px-4 py-3 rounded-lg border border-gray-700 bg-lightDark text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                    <div class="mb-8">
+                        <label for="message" class="block text-gray-400 font-medium mb-2">Mesajınız</label>
+                        <textarea id="message" required class="w-full px-4 py-3 rounded-lg border border-gray-700 bg-lightDark text-white focus:outline-none focus:ring-2 focus:ring-primary h-36 resize-none"></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-primary text-gray-900 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-yellow-500 transition-all duration-300 transform hover:-translate-y-1">
+                        Gönder
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h2 class="text-2xl font-extrabold text-primary mb-4">AKC İNŞAAT</h2>
+                    <p class="text-gray-400 leading-relaxed">Kalitenin ve güvenin adresi olarak, hayallerinizi gerçeğe dönüştürüyoruz.</p>
+                    <div class="flex gap-4 mt-6">
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-lightDark rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-lightDark rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-lightDark rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="w-10 h-10 flex items-center justify-center bg-lightDark rounded-full hover:bg-primary transition-colors duration-300"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-gray-200 mb-4 relative before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-10 before:h-0.5 before:bg-primary">Hızlı Erişim</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-white transition-colors duration-300">Ana Sayfa</a></li>
+                        <li><a href="#services" class="text-gray-400 hover:text-white transition-colors duration-300">Hizmetler</a></li>
+                        <li><a href="#projects" class="text-gray-400 hover:text-white transition-colors duration-300">Projeler</a></li>
+                        <li><a href="#about" class="text-gray-400 hover:text-white transition-colors duration-300">Hakkımızda</a></li>
+                        <li><a href="#contact" class="text-gray-400 hover:text-white transition-colors duration-300">İletişim</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-gray-200 mb-4 relative before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-10 before:h-0.5 before:bg-primary">Hizmetlerimiz</h3>
+                    <ul class="mt-4 space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Konut İnşaatı</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Ticari Yapılar</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Endüstriyel Tesisler</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Yenileme ve Tadilat</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-300">Proje Yönetimi</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-bold text-gray-200 mb-4 relative before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-10 before:h-0.5 before:bg-primary">İletişim</h3>
+                    <ul class="mt-4 space-y-2 text-gray-400">
+                        <li class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-primary"></i> Levent, İstanbul</li>
+                        <li class="flex items-center"><i class="fas fa-phone mr-3 text-primary"></i> (212) 345 67 89</li>
+                        <li class="flex items-center"><i class="fas fa-envelope mr-3 text-primary"></i> info@akcinsaat.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-6 text-center text-gray-500 text-sm">
+                &copy; 2023 AKC İNŞAAT. Tüm Hakları Saklıdır.
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Alert Box -->
+    <div id="alert-box" class="alert-box"></div>
+
+    <script>
+        // Navbar scroll efekti
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('bg-gray-900', 'bg-opacity-95', 'shadow-lg');
+            } else {
+                navbar.classList.remove('bg-gray-900', 'bg-opacity-95', 'shadow-lg');
+            }
+        });
+        
+        // Mobile menu functionality
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const overlay = document.getElementById('overlay');
+        
+        function toggleMenu() {
+            hamburger.classList.toggle('open');
+            mobileMenu.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.classList.toggle('no-scroll');
+        }
+        
+        hamburger.addEventListener('click', toggleMenu);
+        overlay.addEventListener('click', toggleMenu);
+        
+        // Close mobile menu when clicking on links
+        const mobileLinks = document.querySelectorAll('#mobile-menu a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', toggleMenu);
+        });
+        
+        // Form gönderimi ve alert
+        const contactForm = document.getElementById('contact-form');
+        const alertBox = document.getElementById('alert-box');
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                showAlert('Mesajınız için teşekkürler! En kısa sürede sizinle iletişime geçeceğiz.');
+                this.reset();
+            });
+        }
+        
+        function showAlert(message) {
+            alertBox.textContent = message;
+            alertBox.classList.add('show');
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 3000);
+        }
+
+        // Scroll animasyonları
+        document.addEventListener('DOMContentLoaded', function() {
+            const scrollElements = document.querySelectorAll('.scroll-element');
+            
+            const elementInView = (el, dividend = 1) => {
+                const elementTop = el.getBoundingClientRect().top;
+                return (
+                    elementTop <= (window.innerHeight || document.documentElement.clientHeight) / dividend
+                );
+            };
+            
+            const displayScrollElement = (element) => {
+                element.style.opacity = "1";
+                element.style.transform = "translateY(0)";
+            };
+            
+            const handleScrollAnimation = () => {
+                scrollElements.forEach((el) => {
+                    if (elementInView(el, 1.2)) {
+                        displayScrollElement(el);
+                    }
+                })
+            }
+            
+            window.addEventListener('scroll', handleScrollAnimation);
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+</html>
